@@ -1,93 +1,89 @@
-# Easy Install Script
+<div align="center">
+  <a href="https://github.com/empress-eco/easy_install">
+    <img src="https://grow.empress.eco/uploads/default/original/2X/1/1f1e1044d3864269d2a613577edb9763890422ab.png" alt="Logo" width="80" height="80">
+  </a>
 
-- This script will install the pre-requisites, install bench and setup an ERPNext site `(site1.local under frappe-bench)`
-- Passwords for Frappe Administrator and MariaDB (root) will be asked and saved under `~/passwords.txt`
-- MariaDB (root) password may be `password` on a fresh server
-- You can then login as **Administrator** with the Administrator password
-- The log file is saved under `/tmp/logs/install_bench.log` in case you run into any issues during the install.
-- If you find any problems, post them on the forum: [https://discuss.erpnext.com](https://discuss.erpnext.com/tags/installation_problem) under the "Install / Update" category.
+<h2 align="center">Easy Install: Your One-Stop Empress Setup Solution</h2>
 
----
+<p align="center">
+  Streamline your Empress site setup with our all-in-one automated script.
+  <br />
+  <a href="https://empress.eco/"><strong>Explore the Documentation »</strong></a>
+  <br />
+  <br />
+  <a href="https://github.com/empress-eco/easy_install/issues">Report Bug</a>
+  ·
+  <a href="https://github.com/empress-eco/easy_install/issues">Request Feature</a>
+</p>
+</div>
 
-## What will this script do?
+## About Easy Install
 
-- Install all the pre-requisites
-- Install the command line `bench` (under ~/.bench)
-- Create a new bench (a folder that will contain your entire frappe/erpnext setup at ~/frappe-bench)
-- Create a new ERPNext site on the bench (site1.local)
+Easy Install is a comprehensive script designed to simplify the setup process of an Empress site for developers, system administrators, and others. It automates the process of installing multiple dependencies and configurations, making Empress setup a breeze.
 
----
+### Key Features
 
-## Getting started with easy install...
+- Automated installation of all prerequisites and the command line `bench`.
+- Creation of a new bench and an Empress site on the bench.
+- Efficient password management for Administrator and MariaDB.
+- Provision of a log file for troubleshooting installation issues.
 
-Open your Terminal and enter:
+## Technical Stack and Setup Instructions
 
-#### 0. Setup user & Download the install script
+Easy Install is built on Python, leveraging the power of automation to streamline the setup of your Empress site.
 
-If you are on a fresh server and logged in as root, at first create a dedicated user for frappe
-& equip this user with sudo privileges
+### Prerequisites
 
+A fresh server with a dedicated user for Empress equipped with sudo privileges.
+
+### Installation
+
+Clone the project using the following command: 
+```sh
+git clone https://github.com/empress-eco/easy_install.git
 ```
-  adduser [frappe-user]
-  usermod -aG sudo [frappe-user]
+
+Follow the step-by-step guide below to set up your development environment:
+
+```sh
+# Setup user & Download the install script
+adduser [Empress-user]
+usermod -aG sudo [Empress-user]
+
+# Switch to Empress-user and start setup
+su [Empress-user]
+wget https://raw.githubusercontent.com/Empress/bench/develop/install.py
+
+# Run the install script
+sudo python3 install.py
+
+# For production or development, append the --production or --develop flag respectively.
+sudo python3 install.py --production --user [Empress-user]
+sudo python3 install.py --develop
+sudo python3 install.py --develop --user [Empress-user]
+sudo python3 install.py --production --user [Empress-user] --container
 ```
 
-*(it is very common to use "frappe" as frappe-username, but this comes with the security flaw of ["frappe" ranking very high](https://www.reddit.com/r/dataisbeautiful/comments/b3sirt/i_deployed_over_a_dozen_cyber_honeypots_all_over/?st=JTJ0SC0Q&sh=76e05240) in as a username challenged in hacking attempts. So, for production sites it is highly recommended to use a custom username harder to guess)*
+## Usage
 
-*(you can specify the flag --home to specify a directory for your [frappe-user]. Bench will follow the home directory specified by the user's home directory e.g. /data/[frappe-user]/frappe-bench)*
+After installation, navigate to your bench folder and start Empress. For development, use `bench start`. For production, `nginx` and `supervisor` will manage your process.
 
-Switch to `[frappe-user]` (using `su [frappe-user]`) and start the setup
+## Contributing
 
-	wget https://raw.githubusercontent.com/frappe/bench/develop/install.py
+We welcome your contributions! Here's how you can contribute:
 
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-#### 1. Run the install script
+## License and Acknowledgements
 
-	sudo python3 install.py
+### License
 
-*Note: `user` flag to create a user and install using that user (By default, the script will create a user with the username `frappe` if the --user flag is not used)*
+This project is under the MIT License. Your contributions are also licensed under the MIT License. 
 
-For production or development, append the `--production` or `--develop` flag to the command respectively.
+### Acknowledgements
 
-	sudo python3 install.py --production --user [frappe-user]
-
-or
-
-	sudo python3 install.py --develop
-	sudo python3 install.py --develop --user [frappe-user]
-
-	sudo python3 install.py --production --user [frappe-user] --container
-
-*Note: `container` flag to install inside a container (this will prevent the `/proc/sys/vm/swappiness: Read-only` file system error)*
-
-
-	python3 install.py --production --version 11 --user [frappe-user]
-
-use --version flag to install specific version
-
-	python3 install.py --production --version 11 --python python2.7 --user [frappe-user]
-
-use --python flag to specify virtual environments python version, by default script setup python3
-
----
-
-## How do I start ERPNext
-
-1. For development: Go to your bench folder (`~[frappe-user]/frappe-bench` by default) and start the bench with `bench start`
-2. For production: Your process will be setup and managed by `nginx` and `supervisor`. Checkout [Setup Production](https://frappe.io/docs/user/en/bench/guides/setup-production.html) for more information.
-
----
-
-## An error occured mid installation?
-
-TLDR; Save the logs!
-
-1. The easy install script starts multiple processes to install prerequisites, system dependencies, requirements, sets up locales, configuration files, etc.
-
-2. The script pipes all these process outputs and saves it under `/tmp/log/{easy-install-filename}.log` as prompted by the script in the beginning of the script or/and if something went wrong again.
-
-3. Retain this log file and share it in case you need help with proceeding with the install. Since, the file's saved under `/tmp` it'll be cleared by the system after a reboot. Be careful to save it elsewhere if needed!
-
-3. A lot of things can go wrong in setting up the environment due to prior settings, company protocols or even breaking changes in system packages and their dependencies.
-
-4. Sharing your logfile in any issues opened related to this can help us find solutions to it faster and make the script better!
+We extend our heartfelt thanks to the Empress Community, the driving force behind the essential tools that power this project. Their dedication and innovative spirit have been pivotal in developing the foundations and functionalities we rely on. We are profoundly grateful for their pioneering work and ongoing support.
